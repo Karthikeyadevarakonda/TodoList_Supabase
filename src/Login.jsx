@@ -11,16 +11,19 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Google OAuth login
   async function signUpwithOAuth() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
     if (error) {
-      console.error("ERROR IN GOOGLE SIGN UP");
+      console.error("ERROR IN GOOGLE SIGN UP:", error.message);
+      setError("Google login failed. Try again.");
       return;
     }
   }
 
+  // Email/password login
   async function handleLogin(e) {
     e.preventDefault();
     setError("");
@@ -42,22 +45,19 @@ const Login = () => {
   }
 
   return (
-    <div className="flex flex-col gap-3 items-center justify-center px-3 md:px-0 md:pt-20">
-      <div className="p-2 md:p-6 h-full flex flex-col items-center justify-center w-full md:w-1/3">
-        <h1 className="font-bold tracking-widest text-[#364153] text-2xl mb-3">
+    <div className="min-h-screen flex items-center justify-center px-3 md:px-0 bg-gray-50">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 md:p-8">
+        <h1 className="font-bold tracking-widest text-[#364153] text-2xl text-center mb-6">
           LOGIN FORM
         </h1>
 
-        <form
-          className="bg-white p-4 pt-10 space-y-5 w-full min-h-auto border-3 border-t-neutral-400 rounded-2xl border-transparent"
-          onSubmit={handleLogin}
-        >
+        <form className="space-y-5" onSubmit={handleLogin}>
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             type="email"
-            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#cad5e2] sm:text-sm/6"
+            className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#cad5e2] sm:text-sm"
             placeholder="Enter Email"
           />
           <input
@@ -65,12 +65,12 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
             type="password"
-            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#cad5e2] sm:text-sm/6"
+            className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#cad5e2] sm:text-sm"
             placeholder="Enter Password"
           />
           {error && <p className="text-red-500 text-center">{error}</p>}
 
-          {/* Button with loading state */}
+          {/* Login button */}
           <button
             type="submit"
             disabled={loading}
@@ -115,24 +115,24 @@ const Login = () => {
           >
             Don't Have an Account? Register
           </Link>
-
-          {/* Divider */}
-          <div className="flex items-center justify-center gap-2 my-2">
-            <hr className="w-1/3 border-gray-300" />
-            <span className="text-gray-500 text-sm">OR</span>
-            <hr className="w-1/3 border-gray-300" />
-          </div>
-
-          {/* Google OAuth Button */}
-          <button
-            type="button"
-            onClick={signUpwithOAuth}
-            className="w-full flex items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm md:text-base font-semibold shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 active:scale-95"
-          >
-            <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
-            <span className="text-gray-700">Sign up with Google</span>
-          </button>
         </form>
+
+        {/* Divider */}
+        <div className="flex items-center justify-center gap-2 my-6">
+          <hr className="w-1/3 border-gray-300" />
+          <span className="text-gray-500 text-sm">OR</span>
+          <hr className="w-1/3 border-gray-300" />
+        </div>
+
+        {/* Google OAuth Button */}
+        <button
+          type="button"
+          onClick={signUpwithOAuth}
+          className="w-full flex items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm md:text-base font-semibold shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 active:scale-95"
+        >
+          <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
+          <span className="text-gray-700">Sign in with Google</span>
+        </button>
       </div>
     </div>
   );
