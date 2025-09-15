@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import supabase from "./supabase-client";
+import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -8,7 +9,17 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false); // <-- new state
+  const [loading, setLoading] = useState(false);
+
+  async function signUpwithOAuth() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    if (error) {
+      console.error("ERROR IN GOOGLE SIGN UP");
+      return;
+    }
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -36,6 +47,7 @@ const Login = () => {
         <h1 className="font-bold tracking-widest text-[#364153] text-2xl mb-3">
           LOGIN FORM
         </h1>
+
         <form
           className="bg-white p-4 pt-10 space-y-5 w-full min-h-auto border-3 border-t-neutral-400 rounded-2xl border-transparent"
           onSubmit={handleLogin}
@@ -103,6 +115,23 @@ const Login = () => {
           >
             Don't Have an Account? Register
           </Link>
+
+          {/* Divider */}
+          <div className="flex items-center justify-center gap-2 my-2">
+            <hr className="w-1/3 border-gray-300" />
+            <span className="text-gray-500 text-sm">OR</span>
+            <hr className="w-1/3 border-gray-300" />
+          </div>
+
+          {/* Google OAuth Button */}
+          <button
+            type="button"
+            onClick={signUpwithOAuth}
+            className="w-full flex items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm md:text-base font-semibold shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 active:scale-95"
+          >
+            <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
+            <span className="text-gray-700">Sign up with Google</span>
+          </button>
         </form>
       </div>
     </div>
